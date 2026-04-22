@@ -56,41 +56,43 @@ graph LR
     style Бухгалтер fill:#e1f5fe
     style Администратор fill:#fff3e0
     style Планировщик fill:#f3e5f5
+## 📊 Sequence Diagram (Процесс обмена данными)
 
+```mermaid
 sequenceDiagram
-    actor Бухгалтер
-    actor Администратор
-    participant Веб_интерфейс
-    participant Сервер
-    participant БД
-    participant API_ЦБ
-    participant Планировщик
+    actor Accountant as Бухгалтер
+    actor Admin as Администратор
+    participant WebUI as Веб-интерфейс
+    participant Server as Сервер
+    participant DB as БД
+    participant API as API ЦБ РФ
+    participant Scheduler as Планировщик
     
-    Note over Бухгалтер,БД: Сценарий 1: Просмотр графика
+    Note over Accountant,DB: Сценарий 1: Просмотр графика
     
-    Бухгалтер->>Веб_интерфейс: Выбирает валюту и период
-    Веб_интерфейс->>Сервер: GET /api/graph
-    Сервер->>БД: Запрос истории курсов
-    БД-->>Сервер: Массив данных (дата, курс)
-    Сервер-->>Веб_интерфейс: JSON с данными и статистикой
-    Веб_интерфейс-->>Бухгалтер: Отображает график
+    Accountant->>WebUI: Выбирает валюту и период
+    WebUI->>Server: GET /api/graph
+    Server->>DB: Запрос истории курсов
+    DB-->>Server: Массив данных
+    Server-->>WebUI: JSON с данными
+    WebUI-->>Accountant: Отображает график
     
-    Note over Администратор,API_ЦБ: Сценарий 2: Ручная синхронизация
+    Note over Admin,API: Сценарий 2: Ручная синхронизация
     
-    Администратор->>Веб_интерфейс: Нажимает "Синхронизировать"
-    Веб_интерфейс->>Сервер: POST /api/sync
-    Сервер->>API_ЦБ: GET /XML_daily.asp
-    API_ЦБ-->>Сервер: XML с курсами
-    Сервер->>Сервер: Парсинг XML
-    Сервер->>БД: Сохраняет курсы
-    Сервер->>БД: Записывает лог
-    Сервер-->>Веб_интерфейс: Статус выполнения
-    Веб_интерфейс-->>Администратор: Уведомление
+    Admin->>WebUI: Нажимает "Синхронизировать"
+    WebUI->>Server: POST /api/sync
+    Server->>API: GET /XML_daily.asp
+    API-->>Server: XML с курсами
+    Server->>Server: Парсинг XML
+    Server->>DB: Сохраняет курсы
+    Server->>DB: Записывает лог
+    Server-->>WebUI: Статус выполнения
+    WebUI-->>Admin: Уведомление
     
-    Note over Планировщик,API_ЦБ: Сценарий 3: Автоматическая синхронизация
+    Note over Scheduler,API: Сценарий 3: Автоматическая синхронизация
     
-    Планировщик->>Сервер: Ежедневно в 10:00
-    Сервер->>API_ЦБ: GET /XML_daily.asp
-    API_ЦБ-->>Сервер: XML с курсами
-    Сервер->>БД: Сохраняет новые курсы
-    Сервер->>БД: Записывает лог
+    Scheduler->>Server: Ежедневно в 10:00
+    Server->>API: GET /XML_daily.asp
+    API-->>Server: XML с курсами
+    Server->>DB: Сохраняет новые курсы
+    Server->>DB: Записывает лог
