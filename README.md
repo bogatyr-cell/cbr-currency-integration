@@ -5,7 +5,6 @@
 
 ---
 
-
 ## 📝 Описание проекта
 
 **Задача:**  
@@ -39,26 +38,22 @@
 
 ---
 
-## 🔁 Диаграмма последовательности
-
-**Ежедневная автоматическая синхронизация:**
+## 📊 Use Case Diagram (Роли пользователей)
 
 ```mermaid
-sequenceDiagram
-    participant Scheduler as Планировщик (APScheduler)
-    participant Service as CurrencyIntegrationService
-    participant CBR as API ЦБ РФ
-    participant DB as База данных (SQLite)
-
-    Note over Scheduler,DB: Каждый день в 10:00 МСК
-    Scheduler->>Service: sync_currency_rates()
-    Service->>CBR: GET /XML_daily.asp?date_req=сегодня
-    CBR-->>Service: XML с курсами
-    Service->>Service: Парсинг (USD=92.5, EUR=101.2...)
-    loop Для каждой валюты
-        Service->>DB: INSERT INTO rates_history (currency, rate, rate_date)
-        DB-->>Service: OK (или дубликат)
+graph LR
+    subgraph "Модуль интеграции валют ЦБ РФ"
+        
+        Бухгалтер -->|Просмотр| Просмотр_графика
+        Бухгалтер -->|Выбор| Выбор_валюты_и_периода
+        Бухгалтер -->|Анализ| Просмотр_статистики
+        
+        Администратор -->|Управление| Ручная_синхронизация
+        Администратор -->|Контроль| Просмотр_логов
+        
+        Планировщик -->|Автоматически| Ежедневная_синхронизация
     end
-    Service->>DB: INSERT/UPDATE sync_log (status='success')
-    DB-->>Service: OK
-    Service-->>Scheduler: Завершено (N записей)
+    
+    style Бухгалтер fill:#e1f5fe
+    style Администратор fill:#fff3e0
+    style Планировщик fill:#f3e5f5
