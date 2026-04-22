@@ -60,45 +60,45 @@ graph LR
 ---
 ## 📊 Sequence Diagram (Процесс обмена данными)
 
-```plantuml
-@startuml
-actor "Пользователь" as User
-actor "Администратор" as Admin
-participant "Веб-интерфейс" as WebUI
-participant "Сервер FastAPI" as Server
-participant "БД SQLite" as DB
-participant "API ЦБ РФ" as CBR
+```markdown
+## 📊 Sequence Diagram (Процесс обмена данными)
 
-== Получение данных для графика ==
-
-User -> WebUI: Выбирает валюту и период
-WebUI -> Server: GET /api/graph?currency=USD&days=30
-Server -> DB: SELECT rate, rate_date FROM rates_history WHERE currency='USD' AND rate_date >= date('now','-30 days')
-DB --> Server: Массив данных (дата, курс)
-Server --> WebUI: JSON {labels, rates, stats}
-WebUI --> User: Отображает график
-
-== Ручная синхронизация ==
-
-Admin -> WebUI: Нажимает "Синхронизировать сейчас"
-WebUI -> Server: POST /api/sync
-Server -> CBR: GET /XML_daily.asp?date_req=текущая_дата
-CBR --> Server: XML с курсами валют
-Server -> Server: Парсинг XML (USD, EUR, CNY)
-Server -> DB: INSERT INTO rates_history (currency, rate, rate_date)
-DB --> Server: OK
-Server -> DB: INSERT INTO sync_log (status='success')
-Server --> WebUI: 200 OK {status: 'synced', records: 5}
-WebUI --> Admin: Показывает уведомление
-
-== Автоматическая синхронизация (ежедневно в 10:00) ==
-
-participant "Планировщик APScheduler" as Scheduler
-Scheduler -> Server: Вызов /api/sync (внутренний)
-Server -> CBR: GET /XML_daily.asp
-CBR --> Server: XML с курсами
-Server -> DB: Сохраняет новые курсы
-Server -> DB: Записывает лог синхронизации
-Server --> Scheduler: Синхронизация завершена
-
-@enduml
+```mermaid
+sequenceDiagram
+    actor User as Пользователь
+    actor Admin as Администратор
+    participant WebUI as Веб-интерфейс
+    participant Server as Сервер FastAPI
+    participant DB as БД SQLite
+    participant CBR as API ЦБ РФ
+    
+    Note over User,DB: Получение данных для графика
+    
+    User->>WebUI: Выбирает валюту и период
+    WebUI->>Server: GET /api/graph
+    Server->>DB: Запрос истории курсов
+    DB-->>Server: Массив данных
+    Server-->>WebUI: JSON с данными
+    WebUI-->>User: Отображает график
+    
+    Note over Admin,CBR: Ручная синхронизация
+    
+    Admin->>WebUI: Нажимает "Синхронизировать"
+    WebUI->>Server: POST /api/sync
+    Server->>CBR: GET /XML_daily.asp
+    CBR-->>Server: XML с курсами
+    Server->>Server: Парсинг XML
+    Server->>DB: Сохраняет курсы
+    Server->>DB: Логирует синхронизацию
+    Server-->>WebUI: Статус выполнения
+    WebUI-->>Admin: Уведомление
+    
+    participant Scheduler as Планировщик
+    
+    Note over Scheduler,CBR: Автоматическая синхронизация
+    
+    Scheduler->>Server: Ежедневно в 10:00
+    Server->>CBR: GET /XML_daily.asp
+    CBR-->>Server: XML с курсами
+    Server->>DB: Сохраняет новые курсы
+    Server->>DB: Записывает лог
