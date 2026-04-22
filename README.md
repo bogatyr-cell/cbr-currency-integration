@@ -57,4 +57,3 @@ graph LR
     style Администратор fill:#fff3e0
     style Планировщик fill:#f3e5f5
     
-📊(Роли 777)
