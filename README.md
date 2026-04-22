@@ -23,8 +23,7 @@
 
 Проект состоит из следующих модулей:
 
-| Компонент | Файл | Описание |<img width="5661" height="4316" alt="mermaid_20260422_e0e99d" src="https://github.com/user-attachments/assets/31d9baa1-9c55-4fc5-a1d8-b55d02b40ef5" />
-
+| Компонент | Файл | Описание |
 |-----------|------|-----------|
 | **FastAPI приложение** | `main.py` | Точка входа, маршруты, статика |
 | **Клиент API ЦБ РФ** | `cbr_client.py` | Запрос к XML, парсинг, преобразование в словарь курсов |
@@ -58,3 +57,4 @@ graph LR
     style Бухгалтер fill:#e1f5fe
     style Администратор fill:#fff3e0
     style Планировщик fill:#f3e5f5
+<img width="5661" height="4316" alt="mermaid_20260422_e0e99d" src="https://github.com/user-attachments/assets/31d9baa1-9c55-4fc5-a1d8-b55d02b40ef5" />
