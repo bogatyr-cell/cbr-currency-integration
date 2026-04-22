@@ -1,5 +1,3 @@
-<img width="5661" height="4316" alt="mermaid_20260422_e0e99d" src="https://github.com/user-attachments/assets/18a9dda4-3330-46bb-92bb-99ffb58a1d19" />
-<img width="5661" height="4316" alt="deepseek_mermaid_20260422_e0e99d" src="https://github.com/user-attachments/assets/4c60b5a2-f6be-4676-a709-8809a63aedad" />
 # 💱 CBR Currency Integration
 
 **Интеграция валютных данных ЦБ РФ в систему учёта**  
