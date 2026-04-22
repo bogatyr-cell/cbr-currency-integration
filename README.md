@@ -60,7 +60,7 @@ graph LR
 📊 Sequence Diagram (Процесс обмена данными)
 ```mermaid
 graph LR
-sequenceDiagram
+
     participant Пользователь
     participant Веб_интерфейс
     participant Сервер
