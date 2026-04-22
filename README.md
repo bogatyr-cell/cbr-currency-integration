@@ -56,5 +56,5 @@ graph LR
     style Бухгалтер fill:#e1f5fe
     style Администратор fill:#fff3e0
     style Планировщик fill:#f3e5f5
-    ---
-📊(Роли пользователей)
+    
+📊(Роли 777)
