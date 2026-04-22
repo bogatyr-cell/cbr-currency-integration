@@ -8,6 +8,11 @@ def install():
     root = ET.fromstring(resp.content)
     date = root.get('Date')
 
-    #with sqlite3.connect(database_name) as conn:
-        # print(f'✓ Курсы обновлены: {date}')
+    with sqlite3.connect(DB) as conn:
+        for v in root.findall('Valute'):
+            code = v.find('CharCode').text
+            if code in ['USD', 'EUR', 'CNY']:
+                rate = float(v.find('Value').text.replace(',', '.'))
+                conn.execute('INSERT OR IGNORE INTO rates VALUES (?,?,?)', (code, rate, date))
+    print(f'✅ Курсы обновлены: {date}')
 
