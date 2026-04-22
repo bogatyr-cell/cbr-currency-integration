@@ -57,3 +57,47 @@ graph LR
     style Бухгалтер fill:#e1f5fe
     style Администратор fill:#fff3e0
     style Планировщик fill:#f3e5f5
+## 📊 Sequence Diagram (Процесс обмена данными)
+
+```plantuml
+@startuml
+actor "Пользователь" as User
+actor "Администратор" as Admin
+participant "Веб-интерфейс" as WebUI
+participant "Сервер FastAPI" as Server
+participant "БД SQLite" as DB
+participant "API ЦБ РФ" as CBR
+
+== Получение данных для графика ==
+
+User -> WebUI: Выбирает валюту и период
+WebUI -> Server: GET /api/graph?currency=USD&days=30
+Server -> DB: SELECT rate, rate_date FROM rates_history WHERE currency='USD' AND rate_date >= date('now','-30 days')
+DB --> Server: Массив данных (дата, курс)
+Server --> WebUI: JSON {labels, rates, stats}
+WebUI --> User: Отображает график
+
+== Ручная синхронизация ==
+
+Admin -> WebUI: Нажимает "Синхронизировать сейчас"
+WebUI -> Server: POST /api/sync
+Server -> CBR: GET /XML_daily.asp?date_req=текущая_дата
+CBR --> Server: XML с курсами валют
+Server -> Server: Парсинг XML (USD, EUR, CNY)
+Server -> DB: INSERT INTO rates_history (currency, rate, rate_date)
+DB --> Server: OK
+Server -> DB: INSERT INTO sync_log (status='success')
+Server --> WebUI: 200 OK {status: 'synced', records: 5}
+WebUI --> Admin: Показывает уведомление
+
+== Автоматическая синхронизация (ежедневно в 10:00) ==
+
+participant "Планировщик APScheduler" as Scheduler
+Scheduler -> Server: Вызов /api/sync (внутренний)
+Server -> CBR: GET /XML_daily.asp
+CBR --> Server: XML с курсами
+Server -> DB: Сохраняет новые курсы
+Server -> DB: Записывает лог синхронизации
+Server --> Scheduler: Синхронизация завершена
+
+@enduml
