@@ -35,7 +35,7 @@
 - Планировщик вызывает `sync_currency_rates()` → запрос к ЦБ → сохранение в БД.  
 - Пользователь через браузер обращается к `/` → фронтенд загружает список валют через `/api/currencies` → при выборе периода загружает данные через `/api/graph` и строит график.  
 - Ручная синхронизация через POST `/api/sync` вызывает ту же функцию, что и планировщик.
-Бд
+## БД
 <img width="3188" height="2219" alt="mermaid_20260422_b65eed" src="https://github.com/user-attachments/assets/98793c19-5922-453f-836b-c05f568ab1d0" />
 ## 📊процесс обмена данными
 <img width="5661" height="4316" alt="mermaid_20260422_e0e99d" src="https://github.com/user-attachments/assets/31d9baa1-9c55-4fc5-a1d8-b55d02b40ef5" />
