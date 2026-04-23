@@ -1,4 +1,5 @@
 import sqlite3
+from Backend.loggers.loggers_init import install_log_system as Log
 
 database_name = 'database.db'
 
@@ -39,3 +40,5 @@ def init_db():
                 is_active BOOLEAN DEFAULT 1
             )
         ''')
+        conn.close()
+        Log('good','Database','БД создано')
