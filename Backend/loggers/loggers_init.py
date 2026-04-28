@@ -1,4 +1,4 @@
-from Backend.database.install_DB 
+#from Backend.database.install_DB 
 import sqlite3
 
 
@@ -27,7 +27,8 @@ def warrning_log(name,text):
 
 
 def good_log(name,text):
-    with sqlite3.connect(database_name) as conn:
+        
+  #  with sqlite3.connect(database_name) as conn:
         ...
         #и всё мы тут короче записываем и готово
-    print(f'\033[32m{name} - {text}\033[0m')
+  #  print(f'\033[32m{name} - {text}\033[0m')
