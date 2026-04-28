@@ -1,12 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Курсы валют ЦБ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>привет!</h1>
-    В КОЛЛЕДЖЕ ДИЗАЙН ЛЕЖИТ 
+    <div class="box">
+        <h2>Курсы валют ЦБ</h2>
+
+        <div class="cards" id="cards">Загрузка...</div>
+
+        <div>
+            <button class="active" onclick="loadChart('USD')">USD</button>
+            <button onclick="loadChart('EUR')">EUR</button>
+            <button onclick="loadChart('CNY')">CNY</button>
+        </div>
+
+
+        <div id="currentRate" class="current-rate">USD: <span>— ₽</span></div>
+        <div class="canvas-wrapper">
+            <canvas id="chart" width="800" height="400" style="width:100%; height:100%;"></canvas>
+        </div>
+    </div>
+
+    <script>let chart;
+
+        async function init() {
+            try {
+                const res = await fetch('/api/current');
+                const data = await res.json();
+
+                document.getElementById('cards').innerHTML = data.map(c =>
+                    `<div class="card">
+                        <div style="font-size:14px;color:#8b949e;">${c.currency}</div>
+                        <div style="font-size:24px;font-weight:bold;">${c.rate.toFixed(2)} ₽</div>
+                        <div style="font-size:12px;color:#8b949e;">${c.date}</div>
+                    </div>`
+                ).join('');
+            } catch (e) {
+                document.getElementById('cards').innerHTML = 'Ошибка загрузки курсов';
+            }
+            loadChart('USD');
+        }
+
+        async function loadChart(currency) {
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            try {
+                const res = await fetch(`/api/rates/${currency}`);
+                const data = await res.json();
+
+                if (data.rates.length === 0) {
+                    document.getElementById('currentRate').innerHTML = 'Нет данных';
+                    return;
+                }
+
+                const last = data.rates[data.rates.length - 1];
+                document.getElementById('currentRate').innerHTML =
+                    `${currency}: <b>${last.toFixed(2)} ₽</b>`;
+
+                const ctx = document.getElementById('chart').getContext('2d');
+
+                if (chart) {
+                    chart.destroy();
+                }
+
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.dates,
+                        datasets: [{
+                            label: currency + '/RUB',
+                            data: data.rates,
+                            borderColor: '#3fb950',
+                            backgroundColor: 'rgba(63, 185, 80, 0.1)',
+                            tension: 5,
+                            fill: true,
+                            borderWidth: 5,
+                            pointRadius: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#c9d1d9'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#8b949e' },
+                                grid: { color: '#30363d' }
+                            },
+                            y: {
+                                ticks: { color: '#8b949e' },
+                                grid: { color: '#30363d' }
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                document.getElementById('currentRate').innerHTML = 'Ошибка загрузки графика';
+            }
+        }
+
+        init();</script>
 </body>
+
 </html>
