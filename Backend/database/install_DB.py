@@ -1,10 +1,16 @@
 import sqlite3
 #from Backend.loggers.loggers_init import install_log_system as Log
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
+database_name = os.getenv("database_name")
 
-def init_db(database_name):
+
+def init_db():
     with sqlite3.connect(database_name) as conn:
         # курсов валют
         conn.execute('''
