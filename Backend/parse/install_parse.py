@@ -3,8 +3,15 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from Backend.database.install_DB import *
 #from Backend.loggers.loggers_init import install_log_system as Log
+import os
+from dotenv import load_dotenv
 
-def install(database_name):
+load_dotenv()
+
+
+database_name = os.getenv("database_name")
+
+def install():
     resp = requests.get('https://www.cbr.ru/scripts/XML_daily.asp')
     root = ET.fromstring(resp.content)
     date = root.get('Date')
@@ -20,7 +27,6 @@ def install(database_name):
     VALUES (?, ?, ?)
 ''', (code, rate, date))
    # Log('good','Parse',f'Курсы обновлены: {date}')
-
 
 def get_last_history(currency, days=365):
     with sqlite3.connect(database_name) as conn:
@@ -55,3 +61,5 @@ def get_sync_status(limit=67):
             ORDER BY id DESC LIMIT ?
         ''', (limit,)).fetchall()
     #Log('good','Parse (get_sync_status)','Логи получены')
+
+
