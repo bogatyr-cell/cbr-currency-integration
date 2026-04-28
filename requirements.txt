@@ -4,3 +4,4 @@ requests==2.33.1
 schedule==1.2.1
 APScheduler==3.12.2
 python-dateutil==2.9.0 
+python-dotenv==26.1
