@@ -24,6 +24,7 @@ pip install -r requirements.txt
 
 ### Шаг 3: Создайте файл .env в папке проекта
 ```bash
+# .env
 database_name = "database.db"
 project_name = "cbr-currency-integration"
 ```
