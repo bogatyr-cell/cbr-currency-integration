@@ -4,20 +4,34 @@
 Модуль для автоматического ежедневного получения курсов валют с официального API Центрального Банка России, сохранения истории в базу данных и визуализации динамики изменений на интерактивном графике.
 
 ---
-## Первый запуск 
-** 1 - Первый этап (загрузка на пк)**
-git clone https://github.com/bogatyr-cell/cbr-currency-integration.git
-** 2 - Переход в папку проекта**
-cd cbr-currency-integration
-** 3 - Загрузка всех зависимостей**
-pip install -r requirements.txt
+## 🚀 Первый запуск
 
-**Создайте файл .env в папке проекта**
-*КОД*
-# .env
-database_name = "database123.db"
+### 📋 Предварительные требования
+
+- Python 3.8 или выше
+- Git
+- Виртуальное окружение (рекомендуется)
+
+### Шаг 1: Клонирование репозитория
+
+```bash
+git clone https://github.com/bogatyr-cell/cbr-currency-integration.git
+```
+### Шаг 2: Установка всех зависимостей 
+```bash
+pip install -r requirements.txt
+```
+
+### Шаг 3: Создайте файл .env в папке проекта
+```bash
+database_name = "database.db"
 project_name = "cbr-currency-integration"
----
+```
+### Шаг 4: Запустите проект
+```bash
+python app.py
+```
+
 ## 📝 Описание проекта
 
 **Задача:**  
